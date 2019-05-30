@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="55px" height="55px" viewBox="0 0 55 55" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55 (78076) - https://sketchapp.com -->
+    <title>_ionicons_svg_md-checkmark-circle</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Login-Copy" transform="translate(-17.000000, -252.000000)" fill="#5C8ABD" fill-rule="nonzero">
+            <g id="_ionicons_svg_md-checkmark-circle" transform="translate(17.000000, 252.000000)">
+                <path d="M27.5,0 C12.375,0 0,12.375 0,27.5 C0,42.625 12.375,55 27.5,55 C42.625,55 55,42.625 55,27.5 C55,12.375 42.625,0 27.5,0 Z M21.8545673,42.1622596 L7.76081731,28.0685096 L11.7139423,24.1153846 L21.8677885,34.2692308 L43.2992788,12.8377404 L47.2524038,16.7908654 L21.8545673,42.1622596 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>
