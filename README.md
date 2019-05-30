@@ -5,8 +5,10 @@ A web app for data validation and collection
 ### Inspiration:
 * Mozilla's Common Voice Dataset (https://commonvoice.org)
 
-### Current Objectives:
-- See the [Issues][1] and feel free to contribute if there are any unasigned you would like to work on!
+### How Can I Contribute?
+- See the [**Issues**][1] 
+- See the [**Project Board**][2]
+- And feel free to contribute if there are any unasigned issues you would like to work on!
 
 ## Project setup
 ```
@@ -37,3 +39,4 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 [1]: https://github.com/calpoly-csai/web-validate-collect/issues
+[2]: https://github.com/calpoly-csai/web-validate-collect/projects/1
