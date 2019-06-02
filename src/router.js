@@ -30,6 +30,11 @@ export default new Router({
       path: "/validate",
       name: "Validate",
       component: () => import("./views/Validate.vue")
+    },
+    {
+      path: "/phrases",
+      name: "Phrases",
+      component: () => import("./views/Phrases.vue")
     }
   ]
 });

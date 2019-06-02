@@ -23,6 +23,10 @@
         <img src="./assets/upload.svg" alt="img">
         <h3 class="menu-desc" v-show="menuOpen">Upload</h3>
       </router-link>
+      <router-link tag="div" to="/phrases" class="option">
+        <img src="./assets/question.svg" alt="img">
+        <h3 class="menu-desc" v-show="menuOpen">Phrases</h3>
+      </router-link>
       <router-link tag="div" class="option sign-out" to="/">
         <img src="./assets/arrow-back.svg" alt>
         <h3 class="menu-desc" v-show="menuOpen">Leave</h3>
