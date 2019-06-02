@@ -25,6 +25,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 const db = firebase.firestore();
 const auth = firebase.auth();
+const storage = firebase.storage().ref();
 
 Vue.use(Vuex);
 
@@ -123,6 +124,16 @@ export default new Vuex.Store({
         firebase.auth().signOut();
         console.log("signed out");
       }, 1000);
+    },
+    uploadFile({ dispatch }, file) {
+      storage
+        .put(file)
+        .then(res => {
+          console.log("success");
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 });

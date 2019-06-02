@@ -1,8 +1,7 @@
-export let parser = {
+export default {
   data() {
     return {
-      files: [],
-      titleStructures: {
+      fileStructures: {
         ww: [
           "type",
           "gender",
@@ -15,21 +14,30 @@ export let parser = {
           "owner"
         ],
         notww: ["type", "description", "location", "noiseLevel", "timestamp"]
-      },
-      structuredData: []
+      }
     };
   },
   methods: {
-    parseFile(fileName) {
+    /**
+     *
+     * @param {File} file
+     *
+     */
+    parseFile(file) {
       let data = {};
-      const metadata = fileName.split("_");
+      const metadata = file.name.split("_");
       const type = metadata[0];
 
-      const titleStructure = titleStructures[type];
+      const titleStructure = this.fileStructures[type];
 
       for (let i = 0; i < titleStructure[type].length; i++) {
-        data[titleStructure[i]] = metadata[i];
+        try {
+          data[titleStructure[i]] = metadata[i];
+        } catch {
+          return null;
+        }
       }
+      console.log("data: ", data);
       return data;
     }
   }

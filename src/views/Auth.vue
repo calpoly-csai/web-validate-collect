@@ -125,6 +125,11 @@ export default {
   background-color: var(--background);
 }
 
+.page {
+  width: 100%;
+  height: 100vh;
+}
+
 .auth-box {
   position: absolute;
   top: 50%;
