@@ -24,21 +24,31 @@ export default {
      *
      */
     parseFile(file) {
+      if (!this.validateFile(file)) {
+        return null;
+      }
       let data = {};
+      let type, titleStructure;
       const metadata = file.name.split("_");
-      const type = metadata[0];
 
-      const titleStructure = this.fileStructures[type];
+      type = metadata[0];
+      titleStructure = this.fileStructures[type];
+      if (!titleStructure) {
+        return null;
+      }
 
-      for (let i = 0; i < titleStructure[type].length; i++) {
+      for (let i = 0; i < titleStructure.length; i++) {
         try {
           data[titleStructure[i]] = metadata[i];
         } catch {
           return null;
         }
       }
-      console.log("data: ", data);
+
       return data;
+    },
+    validateFile(file) {
+      return file.type === "audio/wav";
     }
   }
 };

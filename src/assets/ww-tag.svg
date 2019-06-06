@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="117px" height="71px" viewBox="0 0 117 71" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.1 (78136) - https://sketchapp.com -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Uploads" transform="translate(-320.000000, -182.000000)">
+            <g id="Group-4" transform="translate(321.000000, 183.000000)">
+                <polygon id="Path-23-Copy" stroke="#979797" fill="#504E4E" points="115.185271 69 80.6852707 34.5 115.185271 0 2.42295891e-13 0 2.48689958e-13 69"></polygon>
+                <g id="Group-3" transform="translate(17.000000, 10.000000)" fill="#4DBAED">
+                    <circle id="Oval" cx="24.5" cy="24.5" r="7.5"></circle>
+                    <g id="Group-2">
+                        <polygon id="Rectangle" points="21 0 28 0 25.9105707 12 22.8976331 12"></polygon>
+                        <polygon id="Rectangle" transform="translate(39.331797, 13.213616) rotate(51.000000) translate(-39.331797, -13.213616) " points="36.0527027 7.02126948 42.6108908 7.05078529 40.70909 19.4059628 37.8863169 19.3932587"></polygon>
+                        <polygon id="Rectangle" transform="translate(42.912939, 29.028097) rotate(103.000000) translate(-42.912939, -29.028097) " points="39.6234214 22.8741996 46.2024571 22.8609717 44.2136952 35.1895292 41.381949 35.1952227"></polygon>
+                        <polygon id="Rectangle" transform="translate(32.897676, 41.680810) rotate(154.000000) translate(-32.897676, -41.680810) " points="29.6310072 35.4904577 36.1643438 35.4666793 34.1692941 47.8847064 31.3572176 47.894941"></polygon>
+                        <polygon id="Rectangle" transform="translate(16.900242, 41.681103) rotate(206.000000) translate(-16.900242, -41.681103) " points="13.6335739 35.4672979 20.1669105 35.4910763 18.2616902 47.8949081 15.4496138 47.8846734"></polygon>
+                        <polygon id="Rectangle" transform="translate(6.884945, 29.028138) rotate(257.000000) translate(-6.884945, -29.028138) " points="3.59542687 22.8611937 10.1744625 22.8744216 8.23567289 35.1950823 5.40392668 35.1893887"></polygon>
+                        <polygon id="Rectangle" transform="translate(10.466578, 13.213871) rotate(309.000000) translate(-10.466578, -13.213871) " points="7.18748393 7.0506354 13.745672 7.02111959 11.732367 19.3939175 8.90959398 19.4066217"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

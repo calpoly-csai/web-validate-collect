@@ -41,7 +41,7 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    addUnvalidatedData(state, payload) {
+    setUnvalidatedData(state, payload) {
       state.unvalidatedData = [...state.unvalidatedData, ...payload];
     },
     setUserInfo(state, payload) {
@@ -95,7 +95,7 @@ export default new Vuex.Store({
       if (pointer.exists) {
         data = pointer.data();
         console.log("data:", data);
-        commit("addUnvalidatedData", data);
+        commit("setUnvalidatedData", data);
         console.log("success");
       } else {
         console.log("getUnvalidatedData failed");
@@ -125,15 +125,28 @@ export default new Vuex.Store({
         console.log("signed out");
       }, 1000);
     },
-    uploadFile({ dispatch }, file) {
-      storage
-        .put(file)
-        .then(res => {
-          console.log("success");
+
+    uploadFiles({ dispatch }, files) {
+      Promise.all(
+        files.map(file => {
+          return storage
+            .child("UnvalidatedData")
+            .child(file.contents.name)
+            .put(file.contents)
+            .then(res => {
+              const { name } = file.contents;
+              const { bucket, fullPath } = res.metadata;
+              const path = `${bucket}/${fullPath}`;
+              db.collection("UnvalidatedData").add({
+                name,
+                path
+              });
+            })
+            .catch(err => {
+              console.error(err);
+            });
         })
-        .catch(err => {
-          console.log(err);
-        });
+      ).catch(err => console.error(err));
     }
   }
 });

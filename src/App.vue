@@ -107,6 +107,8 @@ export default {
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 h1,
@@ -143,13 +145,14 @@ h1 {
 
 /* Menu */
 .menu {
+  z-index: 100;
   position: absolute;
   top: 0;
   left: 0;
   width: 90px;
-  height: 100vh;
+  height: 100%;
   background: var(--dark);
-  padding: 10px;
+  padding: 0 10px;
   transition: width 0.7s;
   overflow: hidden;
 }
@@ -225,5 +228,11 @@ input {
   opacity: 0.7;
   cursor: pointer;
   transform: translate(-100%, -50%);
+}
+
+.diagonal-background {
+  background: url("./assets/background.svg");
+  background-size: cover;
+  background-position: bottom;
 }
 </style>
