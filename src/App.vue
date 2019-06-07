@@ -11,7 +11,7 @@
         <img src="./assets/logo.svg" alt="img">
         <h3 v-show="menuOpen" class="menu-desc">Home</h3>
       </router-link>
-      <router-link tag="div" to="/dashboard" class="option">
+      <router-link tag="div" to="/record" class="option">
         <img src="./assets/record.svg" alt="img">
         <h3 class="menu-desc" v-show="menuOpen">Record</h3>
       </router-link>
@@ -234,5 +234,23 @@ input {
   background: url("./assets/background.svg");
   background-size: cover;
   background-position: bottom;
+}
+
+/* REMOVE INCOMPLETE STYLING ELEMENTS WHEN READY FOR PRODUCTION */
+.incomplete-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  height: 50%;
+  text-align: center;
+}
+.incomplete-box h1 {
+  width: 50%;
+  padding-top: 30px;
+  margin: auto;
+  font-size: 1.5em;
+  font-weight: 100;
 }
 </style>

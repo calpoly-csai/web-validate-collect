@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="383px" height="370px" viewBox="0 0 383 370" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.1 (78136) - https://sketchapp.com -->
+    <title>Incomplete Feature</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="183.5" cy="183.5" r="183.5"></circle>
+        <circle id="path-3" cx="183.5" cy="183.5" r="171.5"></circle>
+    </defs>
+    <g id="Incomplete-Feature" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(8.000000, 2.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Outline-Copy" fill="#E7E7E7" xlink:href="#path-1"></use>
+            <mask id="mask-4" fill="white">
+                <use xlink:href="#path-3"></use>
+            </mask>
+            <use id="Outline" fill="#5C8ABD" xlink:href="#path-3"></use>
+            <rect id="Rectangle" stroke="#979797" fill="#FDFDFD" mask="url(#mask-4)" x="60.5" y="107.5" width="246" height="153" rx="8"></rect>
+            <rect id="Rectangle-Copy" stroke="#979797" fill="#E4E3E3" mask="url(#mask-4)" x="60.5" y="107.5" width="246" height="19"></rect>
+            <circle id="Oval" fill="#FF635B" mask="url(#mask-4)" cx="70.5" cy="117.5" r="3.5"></circle>
+            <circle id="Oval-Copy" fill="#FFBD2D" mask="url(#mask-4)" cx="82.5" cy="117.5" r="3.5"></circle>
+            <circle id="Oval-Copy-2" fill="#29CA40" mask="url(#mask-4)" cx="93.5" cy="117.5" r="3.5"></circle>
+            <rect id="Rectangle-Copy-2" fill="#5C8ABD" mask="url(#mask-4)" x="215" y="248" width="10" height="13"></rect>
+            <rect id="Rectangle-Copy-3" fill="#5C8ABD" mask="url(#mask-4)" x="223" y="229" width="10" height="32"></rect>
+            <rect id="Rectangle-Copy-4" fill="#5C8ABD" mask="url(#mask-4)" x="231" y="211" width="10" height="50"></rect>
+            <rect id="Rectangle-Copy-5" fill="#5C8ABD" mask="url(#mask-4)" x="240" y="224" width="10" height="37"></rect>
+            <rect id="Rectangle-Copy-6" fill="#5C8ABD" mask="url(#mask-4)" x="249" y="231" width="10" height="30"></rect>
+            <rect id="Rectangle-Copy-7" fill="#5C8ABD" mask="url(#mask-4)" x="258" y="217" width="13" height="44"></rect>
+            <rect id="Rectangle-Copy-8" fill="#5C8ABD" mask="url(#mask-4)" x="268" y="209" width="10" height="52"></rect>
+            <rect id="Rectangle-Copy-9" fill="#5C8ABD" mask="url(#mask-4)" x="277" y="227" width="10" height="34"></rect>
+            <rect id="Rectangle-Copy-10" fill="#5C8ABD" mask="url(#mask-4)" x="286" y="220" width="10" height="41"></rect>
+            <rect id="Rectangle-Copy-11" fill="#5C8ABD" mask="url(#mask-4)" x="294" y="207" width="10" height="54"></rect>
+            <rect id="Rectangle-Copy-12" fill="#5C8ABD" mask="url(#mask-4)" x="297" y="195" width="10" height="66"></rect>
+            <rect id="Rectangle" fill="#FDFDFD" mask="url(#mask-4)" x="249" y="261" width="13" height="13"></rect>
+            <rect id="Rectangle-Copy-13" fill="#FDFDFD" mask="url(#mask-4)" x="212" y="295" width="13" height="13"></rect>
+            <rect id="Rectangle-Copy-14" fill="#FDFDFD" mask="url(#mask-4)" x="184" y="308" width="13" height="13"></rect>
+            <rect id="Rectangle-Copy-21" fill="#FDFDFD" mask="url(#mask-4)" x="154" y="323" width="13" height="13"></rect>
+            <rect id="Rectangle-Copy-22" fill="#FDFDFD" mask="url(#mask-4)" x="207" y="267" width="13" height="13"></rect>
+            <rect id="Rectangle-Copy-20" fill="#FDFDFD" mask="url(#mask-4)" x="119" y="323" width="13" height="13"></rect>
+            <rect id="Rectangle-Copy-15" fill="#FDFDFD" mask="url(#mask-4)" x="215" y="323" width="13" height="13"></rect>
+            <rect id="Rectangle-Copy-16" fill="#FDFDFD" mask="url(#mask-4)" x="87" y="308" width="13" height="13"></rect>
+            <rect id="Rectangle-Copy-17" fill="#FDFDFD" mask="url(#mask-4)" x="184" y="342" width="13" height="13"></rect>
+            <rect id="Rectangle-Copy-18" fill="#FDFDFD" mask="url(#mask-4)" x="262" y="236" width="13" height="13"></rect>
+            <rect id="Rectangle-Copy-19" fill="#FDFDFD" mask="url(#mask-4)" x="234" y="226" width="13" height="13"></rect>
+            <path d="" id="Path-7" stroke="#979797" mask="url(#mask-4)"></path>
+            <path d="M20.4976188,235 C74.1658729,293.564531 118.666667,319.288997 154,312.173398 C189.333333,305.057799 215,267.267925 231,198.803776 L307,183.5 C307,265.603109 273.666667,321.66084 207,351.673192 C140.333333,381.685545 75.3333333,346.127814 12,245 L20.4976188,235 Z" id="Path-8" fill-opacity="0.295126748" fill="#FFFFFF" mask="url(#mask-4)"></path>
+        </g>
+    </g>
+</svg>

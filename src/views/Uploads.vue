@@ -12,8 +12,8 @@
         <li
           v-for="file in files"
           class="file"
-          :class="{selectedUpload: file.isSelected}"
-          @click="file.selected = !file.isSelected"
+          :class="{'selected-upload': file.isSelected}"
+          @click="file.isSelected = !file.isSelected"
           :key="file.metadata.timestamp"
         >
           <img :src="require(`@/assets/${file.metadata.type}-tag.svg`)" alt>
@@ -27,9 +27,15 @@
       </transition-group>
     </ul>
     <div class="task-bar">
-      <button v-if="files.length > 0" @click="uploadFiles" class="send-button">Send</button>
-    </div>
+      <label for="file-selector">
+        <img src="../assets/folder.svg" alt>
+      </label>
+      <input id="file-selector" type="file" ref="fileSelector" @change="getInputtedFiles">
 
+      <button v-if="files.length > 0" @click="uploadFiles" class="send-button">Send</button>
+      <img v-if="files.length > 0" src="../assets/trash.svg" alt="delete" @click="removeFiles">
+    </div>
+    <!-- Dynamic Indicators and Effects -->
     <div
       class="drop-indicator"
       :style="{top:dropPostion.y, left: dropPostion.x}"
@@ -37,6 +43,15 @@
     >
       <div class="drop-square base" style="{}"></div>
       <div class="drop-square accent"></div>
+    </div>
+    <div class="upload-indicator" v-if="isUploading">
+      <div class="upload-bits">
+        <div class="upload-bit"></div>
+        <div class="upload-bit"></div>
+        <div class="upload-bit"></div>
+        <div class="upload-bit"></div>
+      </div>
+      <h3>Uploading</h3>
     </div>
   </div>
 </template>
@@ -53,7 +68,8 @@ export default {
         x: "200px",
         y: "200px",
         active: false
-      }
+      },
+      isUploading: false
     };
   },
   methods: {
@@ -92,8 +108,31 @@ export default {
       }
     },
     uploadFiles() {
-      this.$store.dispatch("uploadFiles", this.files);
-      this.files = [];
+      this.isUploading = true;
+      this.$store.dispatch("uploadFiles", this.files).then(() => {
+        this.isUploading = false;
+        this.files = [];
+      });
+    },
+    removeFiles() {
+      for (let i = 0; i < this.files.length; i++) {
+        if (this.files[i].isSelected) {
+          this.files.splice(i, 1);
+        }
+      }
+    },
+    getInputtedFiles() {
+      const { files } = this.$refs.fileSelector;
+      for (let file of files) {
+        const data = this.parseFile(file);
+        console.log("data: ", data);
+        if (!data) {
+          //Display the failure in the app
+          console.log("file could not be parsed");
+          return;
+        }
+        this.files.push({ metadata: data, contents: file, isSelected: false });
+      }
     }
   }
 };
@@ -103,7 +142,7 @@ export default {
 .uploads {
   display: grid;
   grid-template-rows: 100px 1fr 20px;
-  grid-template-columns: 100px 1fr 20px;
+  grid-template-columns: 20px 1fr 20px;
   grid-template-areas:
     "buffer-left header buffer-right"
     "buffer-left files buffer-right"
@@ -207,36 +246,90 @@ export default {
 .task-bar {
   display: flex;
   justify-content: center;
+  align-items: center;
   position: absolute;
   bottom: 0;
   left: 0;
+  padding: 30px 0;
   width: 100%;
 }
 
+.task-bar img {
+  cursor: pointer;
+}
+
+#file-selector {
+  display: none;
+}
+
 .send-button {
-  margin: 20px auto;
+  margin: 20px 60px;
   color: white;
   border-color: white;
 }
 .selected-upload {
-  border: 1px solid var(--accent);
+  border: 3px solid var(--accent);
 }
 .drop-enter {
   opacity: 0;
-  transform: translateY(50px);
+  transform: translateY(30px);
 }
 .drop-leave-to {
   opacity: 0;
-  transform: translateY(-50px);
 }
 
 .drop-enter-active,
 .drop-leave-active {
-  transition: transform 1s, opacity 1s;
+  transition: transform 0.7s, opacity 0.7s;
+}
+.drop-leave-active {
+  position: absolute;
 }
 
 .drop-move {
   transition: transform 0.7s;
+}
+
+.upload-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transform: translateX(-50%);
+}
+.upload-indicator h3 {
+  color: white;
+  opacity: 0.65;
+}
+
+.upload-bits {
+  height: 200px;
+  width: 100%;
+}
+
+.upload-bit {
+  opacity: 0;
+  animation: dash-up 2s ease-out infinite;
+  position: absolute;
+  bottom: 10%;
+  width: 20px;
+  height: 20px;
+  background: white;
+}
+
+.upload-bit:nth-child(1) {
+  left: 12%;
+}
+.upload-bit:nth-child(2) {
+  animation-delay: 0.5s;
+  left: 36%;
+}
+.upload-bit:nth-child(3) {
+  animation-delay: 1s;
+  left: 60%;
+}
+.upload-bit:nth-child(4) {
+  animation-delay: 1.5s;
+  left: 84%;
 }
 
 @keyframes spin {
@@ -245,6 +338,22 @@ export default {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes dash-up {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.65;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
   }
 }
 </style>

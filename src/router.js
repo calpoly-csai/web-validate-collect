@@ -35,6 +35,11 @@ export default new Router({
       path: "/phrases",
       name: "Phrases",
       component: () => import("./views/Phrases.vue")
+    },
+    {
+      path: "/record",
+      name: "Record",
+      component: () => import("./views/Record.vue")
     }
   ]
 });

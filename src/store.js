@@ -127,7 +127,7 @@ export default new Vuex.Store({
     },
 
     uploadFiles({ dispatch }, files) {
-      Promise.all(
+      return Promise.all(
         files.map(file => {
           return storage
             .child("UnvalidatedData")
