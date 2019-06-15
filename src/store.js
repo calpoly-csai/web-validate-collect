@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import router from "./router";
 const firebase = require("firebase");
+const axios = require("axios");
 
 var firebaseConfig = {
   apiKey: "AIzaSyDUefAc2fEMu1Uez0Cfo7tkkqvGqdLPL6Y",
@@ -25,7 +26,7 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 const db = firebase.firestore();
 const auth = firebase.auth();
-const storage = firebase.storage().ref();
+const storage = firebase.storage();
 
 Vue.use(Vuex);
 
@@ -33,7 +34,6 @@ export default new Vuex.Store({
   state: {
     user: {},
     unvalidatedData: [],
-    validatedData: [],
     banner: {
       isVisible: false,
       message: "this is my banner",
@@ -54,9 +54,13 @@ export default new Vuex.Store({
       state.banner.type = payload.type;
       state.banner.message = payload.message;
       state.banner.isVisible = payload.isVisible;
+    },
+    popUnvalidatedData(state) {
+      state.unvalidatedData.shift();
     }
   },
   actions: {
+    //TODO: return a promise
     async logIn({ dispatch, commit }, payload) {
       const userData = await auth
         .signInWithEmailAndPassword(payload.email, payload.password)
@@ -65,8 +69,8 @@ export default new Vuex.Store({
           console.log(err);
           return;
         });
-      dispatch("getProfile", userData.user.uid);
-      dispatch("getUnvalidatedData");
+      await dispatch("getProfile", userData.user.uid);
+      await dispatch("getUnvalidatedData");
       router.push("/dashboard");
       console.log("success");
     },
@@ -83,25 +87,43 @@ export default new Vuex.Store({
         console.log("user not found");
         return;
       }
-      commit("setUserInfo", data);
+      commit("setUserInfo", { ...data, uid });
     },
-
-    getUnvalidatedData({ commit }) {
-      let data;
-      const pointer = db
+    async getUnvalidatedData({ commit, dispatch }) {
+      let files;
+      const docPointers = await db
         .collection("UnvalidatedData")
         .orderBy("timestamp")
-        .limit(5);
-      if (pointer.exists) {
-        data = pointer.data();
-        console.log("data:", data);
-        commit("setUnvalidatedData", data);
-        console.log("success");
+        .limit(5)
+        .get();
+      let entryMetadata = docPointers.docs.map(pointer => {
+        if (pointer.exists) {
+          console.log("pointer", pointer);
+          const data = pointer.data();
+          return { path: data.path, id: pointer.id };
+        }
+      });
+      if (entryMetadata.length) {
+        const unvalidatedData = await dispatch("fetchUnvalidatedFiles", entryMetadata);
+        commit("setUnvalidatedData", unvalidatedData);
       } else {
-        console.log("getUnvalidatedData failed");
+        console.warn("no unvalidated file metadata found in database");
       }
     },
-
+    async fetchUnvalidatedFiles({ state }, metadata) {
+      return Promise.all(
+        metadata.map(async data => {
+          console.log(data);
+          const url = await storage
+            .ref()
+            .child(data.path)
+            .getDownloadURL();
+          const fileBundle = await axios.get(url, { responseType: "blob" });
+          return { file: fileBundle.data, id: data.id };
+        })
+      );
+    },
+    //TODO: return a promise
     async signUp({ state }, payload) {
       await auth.createUserWithEmailAndPassword(payload.email, payload.password).catch(err => {
         console.log(err);
@@ -130,16 +152,21 @@ export default new Vuex.Store({
       return Promise.all(
         files.map(file => {
           return storage
+            .ref()
             .child("UnvalidatedData")
             .child(file.contents.name)
             .put(file.contents)
             .then(res => {
               const { name } = file.contents;
-              const { bucket, fullPath } = res.metadata;
-              const path = `${bucket}/${fullPath}`;
+              const { timestamp } = file.metadata;
+              console.log(res.metadata);
+              const { fullPath } = res.metadata;
               db.collection("UnvalidatedData").add({
                 name,
-                path
+                path: fullPath,
+                timestamp,
+                validators: [],
+                validationScore: 0
               });
             })
             .catch(err => {

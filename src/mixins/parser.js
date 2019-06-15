@@ -8,12 +8,12 @@ export default {
           "description",
           "location",
           "noiseLevel",
-          "firstName",
           "lastName",
+          "firstName",
           "timestamp",
           "owner"
         ],
-        notww: ["type", "description", "location", "noiseLevel", "timestamp"]
+        notww: ["type", "description", "location", "noiseLevel", "timestamp", "owner"]
       }
     };
   },

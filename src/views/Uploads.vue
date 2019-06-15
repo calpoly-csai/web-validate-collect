@@ -17,8 +17,17 @@
           :key="file.metadata.timestamp"
         >
           <img :src="require(`@/assets/${file.metadata.type}-tag.svg`)" alt>
-          <h3 class="subject-descriptor">Subject</h3>
-          <h3 class="subject-value">{{file.metadata.firstName + " " + file.metadata.lastName}}</h3>
+          <h3 class="subject-descriptor" v-if="file.metadata.type == 'ww'">Subject</h3>
+          <h3
+            class="subject-value"
+            v-if="file.metadata.type == 'ww'"
+          >{{file.metadata.firstName + " " + file.metadata.lastName}}</h3>
+          <h3 class="subject-descriptor" v-if="file.metadata.type == 'notww'">Noise Level</h3>
+          <h3
+            class="subject-value"
+            v-if="file.metadata.type == 'notww'"
+          >{{file.metadata.noiseLevel}}</h3>
+
           <h3 class="description-descriptor">Description</h3>
           <h3 class="description-value">{{file.metadata.description}}</h3>
           <h3 class="location-descriptor">Location</h3>
@@ -190,22 +199,21 @@ export default {
 .subject-descriptor,
 .description-descriptor,
 .location-descriptor {
-  text-align: left;
-  font-size: 50px;
+  text-align: center;
 }
 
 .subject-value,
 .description-value .location-value {
-  text-align: left;
-  font-size: 1.5rem;
+  text-align: center;
 }
 
 .subject-descriptor {
   grid-area: subject;
-  text-align: left;
+  text-align: center;
 }
 .description-descriptor {
   grid-area: description;
+  text-align: center;
 }
 .location-descriptor {
   grid-area: location;
@@ -292,9 +300,9 @@ export default {
 
 .upload-indicator {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  transform: translateX(-50%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .upload-indicator h3 {
   color: white;
