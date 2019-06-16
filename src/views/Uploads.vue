@@ -164,6 +164,7 @@ export default {
 
 .uploads-title {
   grid-area: header;
+  margin-top: 30px;
 }
 .files {
   position: relative;

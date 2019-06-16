@@ -70,7 +70,6 @@ export default new Vuex.Store({
           return;
         });
       await dispatch("getProfile", userData.user.uid);
-      await dispatch("getUnvalidatedData");
       router.push("/dashboard");
       console.log("success");
     },

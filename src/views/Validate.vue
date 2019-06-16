@@ -53,6 +53,12 @@ export default {
 <style>
 .validator {
   display: grid;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  height: 50%;
 
   background: #e3e3e3;
   grid-template-rows: 100px 1fr;
