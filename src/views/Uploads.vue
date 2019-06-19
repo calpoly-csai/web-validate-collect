@@ -341,15 +341,6 @@ export default {
   left: 84%;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes dash-up {
   0% {
     opacity: 0;
