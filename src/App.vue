@@ -59,12 +59,14 @@ export default {
     },
 
     bannerColor() {
-      if (this.banner.type === "error") {
-        //Red Color
-        return "#eb3333";
-      } else {
-        //Accent Color
-        return "#4dbaed";
+      switch (this.banner.type) {
+        
+        case "default":
+          return "#4dbaed"
+        case "error":
+          return "#eb3333";
+        case "success":
+          return "#1E963D"
       }
     }
   },
@@ -80,7 +82,52 @@ export default {
     },
     signOut() {
       this.$store.dispatch("signOut");
+    },
+    handleConnectionState(state) {
+
+      const bannerCloser = () => {
+        const bannerTime = 4000
+        setTimeout(() => {
+        this.$store.commit("setBanner", { isVisible: false });
+      }, bannerTime);
+      }
+      const {commit} = this.$store;
+
+
+
+      switch(state) {
+        case "online":
+        commit("setBanner", {
+        message: "You're back online!",
+        type: "success"
+      });
+      bannerCloser()
+      break;
+
+      case "offline":
+        commit("setBanner", {
+        message: "You have lost connection...",
+        type: "error"
+      });
+      bannerCloser()
+      break;
+
+      case "load":
+        !navigator.onLine ? commit("setBanner", {message: "Running offline: features are limited"}) : ""
+        bannerCloser()
+        break;
+
+
+      }
     }
+  },
+  mounted() {
+    //Handle online state
+    const networkEvents = ["offline", "online", "load"]
+    networkEvents.forEach(event => window.addEventListener(event, e => {
+      this.handleConnectionState(event)
+    })
+    )
   }
 };
 </script>
@@ -120,23 +167,37 @@ h5 {
 }
 
 button {
-  display: block;
   font-family: inherit;
-  font-size: 100%;
-  line-height: 1.15;
   margin: 0;
-  border: 2px solid var(--dark);
-  padding: 10px;
+  border:none;
   background-color: transparent;
-  border-radius: 10px;
-  transition: background-color 0.5s, border-radius 0.5s;
   cursor: pointer;
-  background-color: inherit;
 }
 
-button:hover {
+.nav-button {
+  display: block;
+  font-size: 100%;
+  line-height: 1.15;
+  border: 2px solid var(--dark);
+  padding: 10px;
+  border-radius: 10px;
+  transition: background-color 0.5s, border-radius 0.5s;
+}
+
+.nav-button:hover {
   background-color: rgba(255, 255, 255, 0.26);
   border-radius: 15px;
+}
+
+.loader {
+  width: 70px;
+  height: 70px;
+  border-left: 1px solid var(--base);
+  border-right: 6px solid var(--base);
+  border-top: 7px solid var(--base);
+  border-radius:  50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
 }
 
 h1 {
@@ -252,5 +313,18 @@ input {
   margin: auto;
   font-size: 1.5em;
   font-weight: 100;
+}
+
+.white-border {
+  border-color: white;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg)
+  }
+  to {
+    transform: rotate(360deg)
+  }
 }
 </style>

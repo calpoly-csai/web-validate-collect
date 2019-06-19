@@ -37,6 +37,7 @@ export default new Vuex.Store({
     banner: {
       isVisible: false,
       message: "this is my banner",
+      //Types include error, success, and default
       type: "default"
     }
   },
@@ -49,11 +50,16 @@ export default new Vuex.Store({
     },
     setBanner(state, payload) {
       payload.message = payload.message || state.banner.message;
-      payload.type = payload.type || state.banner.type;
-      payload.isVisible = payload.isVisible || true;
+      payload.type = payload.type || "default";
+      payload.isVisible = payload.isVisible == false ? false : true;
       state.banner.type = payload.type;
       state.banner.message = payload.message;
       state.banner.isVisible = payload.isVisible;
+    },
+    displayError(state, error) {
+      state.banner.type = "error";
+      state.banner.message = error.message;
+      state.banner.isVisible = true;
     },
     popUnvalidatedData(state) {
       state.unvalidatedData.shift();

@@ -39,12 +39,12 @@
               v-model.lazy="confirmPassword"
             >
 
-            <button v-if="!signupOpen" key="login" class="auth-button" @click="logIn">Go</button>
-            <button v-if="signupOpen" key="addUser" class="auth-button" @click="signUp">Send</button>
+            <button v-if="!signupOpen" key="login" class="nav-button" @click="logIn">Go</button>
+            <button v-if="signupOpen" key="addUser" class="nav-button" @click="signUp">Send</button>
 
             <button
               @click="signupOpen = !signupOpen"
-              class="auth-button"
+              class="nav-button"
               key="signUpButton"
               v-if="!signupOpen"
             >Sign Up</button>
@@ -52,7 +52,7 @@
             <button
               v-if="signupOpen"
               @click="signupOpen = !signupOpen"
-              class="auth-button"
+              class="nav-button"
               key="backToLogin"
             >Back</button>
           </transition-group>
@@ -144,7 +144,7 @@ export default {
   margin: auto;
 }
 
-.auth-button {
+.nav-button {
   margin: 20px auto;
 }
 
