@@ -9,7 +9,11 @@
             <audio ref="audio"></audio>
           </button>
           <ul class="file-fields">
-            <li v-for="(value, key) in currentData" :key="currentData.timestamp">{{key}}:{{value}}</li>
+            <li v-for="(value, key) in currentData"
+                v-bind:key="value.timestamp"
+                >
+              {{key}}:{{value}}
+            </li>
           </ul>
         </div>
       </div>
@@ -18,7 +22,8 @@
 </template>
 
 <script>
-import parser from "../mixins/parser.js";
+import parser from '../mixins/parser';
+
 export default {
   mixins: [parser],
   data() {
@@ -26,39 +31,38 @@ export default {
       fileFields: [],
       loadingData: true,
       currentData: {},
-      validatedData: {}
+      validatedData: {},
     };
   },
   computed: {
     unvalidatedData() {
       return this.$store.state.unvalidatedData;
-    }
+    },
   },
   methods: {
     postValidations() {
-      //insert loader
+      // insert loader
       this.$store
-        .dispatch("uploadFiles", this.validatedData)
-        .then(res => console.log("turn off loader"));
+        .dispatch('uploadFiles', this.validatedData)
+        .then(console.log('turn off loader'));
     },
     nextFile() {
-      this.$store.commit("popUnvalidatedData");
+      this.$store.commit('popUnvalidatedData');
       this.currentData = this.parseFile(this.unvalidatedData[0]);
     },
     toggleAudio() {
       console.log(this.$refs.audio);
-      console.log("pressed audio button");
-    }
+      console.log('pressed audio button');
+    },
   },
   mounted() {
-    
     if (this.unvalidatedData.length > 0) {
       this.currentData = this.parseFile(this.unvalidatedData[0].file);
       this.$refs.audio.src = URL.createObjectURL(this.unvalidatedData[0].file);
     } else {
       console.warn("couldn't find currentData");
     }
-  }
+  },
 };
 </script>
 
@@ -74,7 +78,9 @@ export default {
 
   grid-template-rows: 4fr 1fr;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-areas: "validation validation validation validation validation" "left approve center deny right";
+  grid-template-areas:
+    "validation validation validation validation validation"
+    "left approve center deny right";
 }
 .file-info {
   background: #e3e3e3;
@@ -128,4 +134,3 @@ export default {
   transition: opacity;
 }
 </style>
-

@@ -66,19 +66,20 @@
 </template>
 
 <script>
-import parser from "../mixins/parser.js";
-import { Promise } from "q";
+import { Promise } from 'q';
+import parser from '../mixins/parser.js';
+
 export default {
   mixins: [parser],
   data() {
     return {
       files: [],
       dropPostion: {
-        x: "200px",
-        y: "200px",
-        active: false
+        x: '200px',
+        y: '200px',
+        active: false,
       },
-      isUploading: false
+      isUploading: false,
     };
   },
   methods: {
@@ -86,12 +87,12 @@ export default {
       this.dropPostion.active = false;
       event.preventDefault();
       const { files } = event.dataTransfer;
-      for (let file of files) {
+      for (const file of files) {
         const data = this.parseFile(file);
-        console.log("data: ", data);
+        console.log('data: ', data);
         if (!data) {
-          //Display the failure in the app
-          console.log("file could not be parsed");
+          // Display the failure in the app
+          console.log('file could not be parsed');
           return;
         }
         this.files.push({ metadata: data, contents: file, isSelected: false });
@@ -100,25 +101,24 @@ export default {
     handleDrag(event) {
       const squareMid = 37.5;
       this.dropPostion.active = true;
-      this.dropPostion.x = event.x - squareMid + "px";
-      this.dropPostion.y = event.y - squareMid + "px";
+      this.dropPostion.x = `${event.x - squareMid}px`;
+      this.dropPostion.y = `${event.y - squareMid}px`;
     },
     handleDragEnd() {
       this.dropPostion.active = false;
     },
     getTag(type) {
-      if (type === "ww") {
-        console.log("identified as ww");
-        return "../assets/ww-tag.svg";
-      } else if (type == "nww") {
-        return "../assets/nww-tag.svg";
-      } else {
-        console.warn(`couldn't identify type of ${type}`);
+      if (type === 'ww') {
+        console.log('identified as ww');
+        return '../assets/ww-tag.svg';
+      } if (type == 'nww') {
+        return '../assets/nww-tag.svg';
       }
+      console.warn(`couldn't identify type of ${type}`);
     },
     uploadFiles() {
       this.isUploading = true;
-      this.$store.dispatch("uploadFiles", this.files).then(() => {
+      this.$store.dispatch('uploadFiles', this.files).then(() => {
         this.isUploading = false;
         this.files = [];
       });
@@ -132,18 +132,18 @@ export default {
     },
     getInputtedFiles() {
       const { files } = this.$refs.fileSelector;
-      for (let file of files) {
+      for (const file of files) {
         const data = this.parseFile(file);
-        console.log("data: ", data);
+        console.log('data: ', data);
         if (!data) {
-          //Display the failure in the app
-          console.log("file could not be parsed");
+          // Display the failure in the app
+          console.log('file could not be parsed');
           return;
         }
         this.files.push({ metadata: data, contents: file, isSelected: false });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -357,5 +357,3 @@ export default {
   }
 }
 </style>
-
-

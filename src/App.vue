@@ -50,7 +50,7 @@ export default {
     return {
       showMenu: false,
       menuOpen: false,
-      currentLocation: "Auth"
+      currentLocation: 'Auth',
     };
   },
   computed: {
@@ -60,75 +60,80 @@ export default {
 
     bannerColor() {
       switch (this.banner.type) {
-        
-        case "default":
-          return "#4dbaed"
-        case "error":
-          return "#eb3333";
-        case "success":
-          return "#1E963D"
+        case 'default':
+          return '#4dbaed';
+        case 'error':
+          return '#eb3333';
+        case 'success':
+          return '#1E963D';
+        default:
+          console.log('UNEXPECTED BANNER TYPE', this.banner.type);
+          console.log('returning default color');
+          return '#4dbaed';
       }
-    }
+    },
   },
   watch: {
+    // eslint-disable-next-line
     $route(to, from) {
       this.currentLocation = to;
-      this.showMenu = this.currentLocation.name !== "Auth";
-    }
+      this.showMenu = this.currentLocation.name !== 'Auth';
+    },
   },
   methods: {
     closeBanner() {
-      this.$store.commit("setBanner", { isVisible: false });
+      this.$store.commit('setBanner', { isVisible: false });
     },
     signOut() {
-      this.$store.dispatch("signOut");
+      this.$store.dispatch('signOut');
     },
     handleConnectionState(state) {
-
       const bannerCloser = () => {
-        const bannerTime = 4000
+        const bannerTime = 4000;
         setTimeout(() => {
-        this.$store.commit("setBanner", { isVisible: false });
-      }, bannerTime);
+          this.$store.commit('setBanner', { isVisible: false });
+        }, bannerTime);
+      };
+      const { commit } = this.$store;
+
+
+      switch (state) {
+        case 'online':
+          commit('setBanner', {
+            message: "You're back online!",
+            type: 'success',
+          });
+          bannerCloser();
+          break;
+
+        case 'offline':
+          commit('setBanner', {
+            message: 'You have lost connection...',
+            type: 'error',
+          });
+          bannerCloser();
+          break;
+
+        case 'load':
+          if (!navigator.onLine) {
+            commit('setBanner', { message: 'Running offline: features are limited' });
+          }
+          bannerCloser();
+          break;
+        default:
+          console.log('UNEXPECTED STATE', state);
+          break;
       }
-      const {commit} = this.$store;
-
-
-
-      switch(state) {
-        case "online":
-        commit("setBanner", {
-        message: "You're back online!",
-        type: "success"
-      });
-      bannerCloser()
-      break;
-
-      case "offline":
-        commit("setBanner", {
-        message: "You have lost connection...",
-        type: "error"
-      });
-      bannerCloser()
-      break;
-
-      case "load":
-        !navigator.onLine ? commit("setBanner", {message: "Running offline: features are limited"}) : ""
-        bannerCloser()
-        break;
-
-
-      }
-    }
+    },
   },
   mounted() {
-    //Handle online state
-    const networkEvents = ["offline", "online", "load"]
-    networkEvents.forEach(event => window.addEventListener(event, e => {
-      this.handleConnectionState(event)
-    })
-    )
-  }
+    // Handle online state
+    const networkEvents = ['offline', 'online', 'load'];
+    // eslint-disable-next-line
+    networkEvents.forEach(event => window.addEventListener(event, (e) => {
+      this.handleConnectionState(event);
+    }));
+  },
 };
 </script>
 

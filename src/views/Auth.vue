@@ -67,16 +67,16 @@ export default {
   data() {
     return {
       signupOpen: false,
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: ""
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     };
   },
   computed: {
     title() {
-      return this.signupOpen ? "Become a Member" : "Log In";
-    }
+      return this.signupOpen ? 'Become a Member' : 'Log In';
+    },
   },
   methods: {
     sendForm() {
@@ -88,33 +88,32 @@ export default {
     },
 
     logIn() {
-      this.$store.dispatch("logIn", {
+      this.$store.dispatch('logIn', {
         email: this.email,
-        password: this.password
+        password: this.password,
       });
     },
     signUp() {
-      const dataFilled =
-        this.name && this.email && this.password && this.confirmPassword;
+      const dataFilled = this.name && this.email && this.password && this.confirmPassword;
       const passwordsMatch = this.password === this.confirmPassword;
       const inputValid = dataFilled && passwordsMatch;
 
       if (inputValid) {
-        this.$store.dispatch("signUp", {
+        this.$store.dispatch('signUp', {
           email: this.email,
-          password: this.password
+          password: this.password,
         });
       } else {
-        let errorPackage = { type: "error", isVisible: true };
+        const errorPackage = { type: 'error', isVisible: true };
         if (!dataFilled) {
-          errorPackage.message = "Fill out all of the fields";
+          errorPackage.message = 'Fill out all of the fields';
         } else if (!passwordsMatch) {
           errorPackage.message = "Passwords don't match";
         }
-        this.$store.commit("setBanner", errorPackage);
+        this.$store.commit('setBanner', errorPackage);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -167,4 +166,3 @@ export default {
   transition: transform 0.7s;
 }
 </style>
-

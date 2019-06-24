@@ -54,5 +54,3 @@ export default {};
   color: var(--light-text);
 }
 </style>
-
-

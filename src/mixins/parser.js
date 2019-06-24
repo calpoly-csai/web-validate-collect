@@ -3,18 +3,18 @@ export default {
     return {
       fileStructures: {
         ww: [
-          "type",
-          "gender",
-          "description",
-          "location",
-          "noiseLevel",
-          "lastName",
-          "firstName",
-          "timestamp",
-          "owner"
+          'type',
+          'gender',
+          'description',
+          'location',
+          'noiseLevel',
+          'lastName',
+          'firstName',
+          'timestamp',
+          'owner',
         ],
-        notww: ["type", "description", "location", "noiseLevel", "timestamp", "owner"]
-      }
+        notww: ['type', 'description', 'location', 'noiseLevel', 'timestamp', 'owner'],
+      },
     };
   },
   methods: {
@@ -27,17 +27,16 @@ export default {
       if (!this.validateFile(file)) {
         return null;
       }
-      let data = {};
-      let type, titleStructure;
-      const metadata = file.name.split("_");
+      const data = {};
+      const metadata = file.name.split('_');
 
-      type = metadata[0];
-      titleStructure = this.fileStructures[type];
+      const type = metadata[0];
+      const titleStructure = this.fileStructures[type];
       if (!titleStructure) {
         return null;
       }
 
-      for (let i = 0; i < titleStructure.length; i++) {
+      for (let i = 0; i < titleStructure.length; i += 1) {
         try {
           data[titleStructure[i]] = metadata[i];
         } catch {
@@ -48,7 +47,7 @@ export default {
       return data;
     },
     validateFile(file) {
-      return file.type === "audio/wav";
-    }
-  }
+      return file.type === 'audio/wav';
+    },
+  },
 };
