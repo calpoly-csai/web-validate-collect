@@ -9,7 +9,13 @@
             <audio ref="audio"></audio>
           </button>
           <ul class="file-fields">
-            <li v-for="(value, key) in currentData" :key="currentData.timestamp">{{key}}:{{value}}</li>
+            <!-- Vue expects the content of v-bind:key
+                to use the v-for variables. (e.g value rather than currentData)
+            -->
+            <li v-for="(value, key) in currentData"
+                v-bind:key="value.timestamp">
+              {{key}}:{{value}}
+            </li>
           </ul>
         </div>
       </div>

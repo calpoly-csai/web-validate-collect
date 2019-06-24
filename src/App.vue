@@ -67,6 +67,10 @@ export default {
           return "#eb3333";
         case "success":
           return "#1E963D"
+        default:
+          // eslint wants a return value in the default/unexpected case
+          console.warn("UNEXPECTED type: ",this.banner.type," Returning default color");
+          return "#4dbaed"
       }
     }
   },
