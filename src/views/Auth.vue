@@ -144,10 +144,6 @@ export default {
   margin: auto;
 }
 
-.nav-button {
-  margin: 20px auto;
-}
-
 .fade-drop-enter,
 .fade-drop-leave-to {
   transform: scale(0);
