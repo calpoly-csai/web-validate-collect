@@ -65,7 +65,7 @@ export default {
      */
     parseAcronyms(data) {
       const acronymMap = {
-        type: { ww: "Wake Word", nww: "Not Wake Word" },
+        type: { ww: "Wake Word", notww: "Not Wake Word" },
         gender: { m: "Male", f: "Female" },
         noiseLevel: { q: "Quiet", m: "Moderate", l: "Loud" }
       };
