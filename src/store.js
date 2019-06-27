@@ -32,8 +32,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    user: {},
+    user: { uid: "Apnwimh8YBNz2yNdX2DQ9mbqAUD3" },
     unvalidatedData: [],
+    validatedData: [],
     banner: {
       isVisible: false,
       message: "this is my banner",
@@ -51,18 +52,29 @@ export default new Vuex.Store({
     setBanner(state, payload) {
       payload.message = payload.message || state.banner.message;
       payload.type = payload.type || "default";
+      //specifically check for false to weed out undefined values
       payload.isVisible = payload.isVisible == false ? false : true;
       state.banner.type = payload.type;
       state.banner.message = payload.message;
       state.banner.isVisible = payload.isVisible;
     },
-    displayError(state, error) {
+    displayError(state, message) {
       state.banner.type = "error";
-      state.banner.message = error.message;
+      state.banner.message = message;
       state.banner.isVisible = true;
     },
-    popUnvalidatedData(state) {
-      state.unvalidatedData.shift();
+    validateFirst(state, isValid) {
+      const validated = state.unvalidatedData.shift();
+      validated.isValid = isValid;
+      state.validatedData.push(validated);
+    },
+    eraseValidatedData(state) {
+      state.validatedData = [];
+    },
+    eraseSessionData(state) {
+      state.user = {};
+      state.unvalidatedData = [];
+      state.validatedData = [];
     }
   },
   actions: {
@@ -94,8 +106,7 @@ export default new Vuex.Store({
       }
       commit("setUserInfo", { ...data, uid });
     },
-    async getUnvalidatedData({ commit, dispatch }) {
-      let files;
+    async getUnvalidatedData({ state, commit, dispatch }) {
       const docPointers = await db
         .collection("UnvalidatedData")
         .orderBy("timestamp")
@@ -103,12 +114,17 @@ export default new Vuex.Store({
         .get();
       let entryMetadata = docPointers.docs.map(pointer => {
         if (pointer.exists) {
-          console.log("pointer", pointer);
           const data = pointer.data();
-          return { path: data.path, id: pointer.id };
+          console.log("Have I validated this? ", !data.validators.includes(state.user.uid));
+          if (!data.validators.includes(state.user.uid)) {
+            return { name: data.name, path: data.path, id: pointer.id };
+          }
         }
       });
-      if (entryMetadata.length) {
+      const hasRealValuedElements = entryMetadata.length && entryMetadata.every(val => !!val);
+      console.log("hasrealvalues: ", hasRealValuedElements, entryMetadata);
+      if (hasRealValuedElements) {
+        console.log("entryMetadata:", entryMetadata);
         const unvalidatedData = await dispatch("fetchUnvalidatedFiles", entryMetadata);
         commit("setUnvalidatedData", unvalidatedData);
       } else {
@@ -124,7 +140,7 @@ export default new Vuex.Store({
             .child(data.path)
             .getDownloadURL();
           const fileBundle = await axios.get(url, { responseType: "blob" });
-          return { file: fileBundle.data, id: data.id };
+          return { file: fileBundle.data, id: data.id, name: data.name };
         })
       );
     },
@@ -146,11 +162,12 @@ export default new Vuex.Store({
       }, 5000);
     },
     //TODO:fix sign out
-    signOut() {
+    signOut({ commit }) {
       setTimeout(() => {
         firebase.auth().signOut();
+        commit("eraseSessionData");
         console.log("signed out");
-      }, 1000);
+      }, 100);
     },
 
     uploadFiles({ dispatch }, files) {
@@ -179,6 +196,34 @@ export default new Vuex.Store({
             });
         })
       ).catch(err => console.error(err));
+    },
+
+    uploadValidations({ state, commit }) {
+      if (!state.validatedData.length) {
+        commit("displayError", "You don't have any unvalidated data.");
+        return;
+      }
+      return Promise.all([
+        state.validatedData.map(async data => {
+          let updateScore;
+          if (data.isValid) {
+            updateScore = firebase.firestore.FieldValue.increment(1);
+          } else {
+            updateScore = firebase.firestore.FieldValue.increment(-1);
+          }
+          //Update score
+          await db
+            .collection("UnvalidatedData")
+            .doc(data.id)
+            .update({ validationScore: updateScore });
+          //Update list of people who have validated data
+          const updateUserList = firebase.firestore.FieldValue.arrayUnion(state.user.uid);
+          await db
+            .collection("UnvalidatedData")
+            .doc(data.id)
+            .update({ validators: updateUserList });
+        })
+      ]);
     }
   }
 });
