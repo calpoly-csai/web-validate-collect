@@ -27,11 +27,12 @@
         <img src="./assets/question.svg" alt="img">
         <h3 class="menu-desc" v-show="menuOpen">Phrases</h3>
       </router-link>
-      <router-link tag="div" class="option sign-out" to="/">
+      <router-link tag="div" class="option sign-out" to="/" @click.native="signOut">
         <img src="./assets/arrow-back.svg" alt>
         <h3 class="menu-desc" v-show="menuOpen">Leave</h3>
       </router-link>
     </div>
+
     <router-view></router-view>
 
     <transition name="show">
@@ -60,9 +61,8 @@ export default {
 
     bannerColor() {
       switch (this.banner.type) {
-        
         case "default":
-          return "#4dbaed"
+          return "#4dbaed";
         case "error":
           return "#eb3333";
         case "success":
@@ -86,52 +86,53 @@ export default {
     },
     signOut() {
       this.$store.dispatch("signOut");
+      console.log("signed out");
     },
     handleConnectionState(state) {
-
       const bannerCloser = () => {
-        const bannerTime = 4000
+        const bannerTime = 4000;
         setTimeout(() => {
-        this.$store.commit("setBanner", { isVisible: false });
-      }, bannerTime);
-      }
-      const {commit} = this.$store;
+          this.$store.commit("setBanner", { isVisible: false });
+        }, bannerTime);
+      };
+      const { commit } = this.$store;
 
-
-
-      switch(state) {
+      switch (state) {
         case "online":
-        commit("setBanner", {
-        message: "You're back online!",
-        type: "success"
-      });
-      bannerCloser()
-      break;
+          commit("setBanner", {
+            message: "You're back online!",
+            type: "success"
+          });
+          bannerCloser();
+          break;
 
-      case "offline":
-        commit("setBanner", {
-        message: "You have lost connection...",
-        type: "error"
-      });
-      bannerCloser()
-      break;
+        case "offline":
+          commit("setBanner", {
+            message: "You have lost connection...",
+            type: "error"
+          });
+          bannerCloser();
+          break;
 
-      case "load":
-        !navigator.onLine ? commit("setBanner", {message: "Running offline: features are limited"}) : ""
-        bannerCloser()
-        break;
-
-
+        case "load":
+          !navigator.onLine
+            ? commit("setBanner", {
+                message: "Running offline: features are limited"
+              })
+            : "";
+          bannerCloser();
+          break;
       }
     }
   },
   mounted() {
     //Handle online state
-    const networkEvents = ["offline", "online", "load"]
-    networkEvents.forEach(event => window.addEventListener(event, e => {
-      this.handleConnectionState(event)
-    })
-    )
+    const networkEvents = ["offline", "online", "load"];
+    networkEvents.forEach(event =>
+      window.addEventListener(event, e => {
+        this.handleConnectionState(event);
+      })
+    );
   }
 };
 </script>
@@ -173,13 +174,14 @@ h5 {
 button {
   font-family: inherit;
   margin: 0;
-  border:none;
+  border: none;
   background-color: transparent;
   cursor: pointer;
 }
 
 .nav-button {
   display: block;
+  margin: 20px auto;
   font-size: 100%;
   line-height: 1.15;
   border: 2px solid var(--dark);
@@ -199,7 +201,7 @@ button {
   border-left: 1px solid var(--base);
   border-right: 6px solid var(--base);
   border-top: 7px solid var(--base);
-  border-radius:  50%;
+  border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: auto;
 }
@@ -325,10 +327,10 @@ input {
 
 @keyframes spin {
   from {
-    transform: rotate(0deg)
+    transform: rotate(0deg);
   }
   to {
-    transform: rotate(360deg)
+    transform: rotate(360deg);
   }
 }
 </style>
