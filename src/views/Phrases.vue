@@ -56,13 +56,10 @@ select {
   box-sizing: border-box;
   -webkit-appearance: none;
   -moz-appearance: none;
-}
 
-
-select:focus {
   background-image:
-    linear-gradient(45deg, green 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, green 50%),
+    linear-gradient(135deg, green 50%, transparent 50%),
+    linear-gradient(45deg, transparent 50%, green 50%),
     linear-gradient(to right, #ccc, #ccc);
   background-position:
     calc(100% - 15px) 1em,
