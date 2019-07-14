@@ -41,6 +41,11 @@ export default {
         if (done && tokenObj.isSelected) { // if already found a contiguous block
           let msg = "Please select a contiguous section of tokens";
           console.log(msg);
+          // deselect it; need to deselect so this.buttonDataHasSelection() call does not loop infinitely
+          tokenObj.isSelected = false;
+          // need to update view so user knows the deselection occurred
+          this.$forceUpdate();
+          // tell the user that contiguous selections are required
           alert(msg);
           console.log("done && tokenObj.isSelected....", "start", start, "end",end);
           return;
