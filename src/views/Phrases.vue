@@ -2,21 +2,62 @@
 export default {
   data: function() {
     return {
-      categories: ["Building", "Office Hours", "Professor", "create_placeholder?"],
+      categories: ["{Building}", "{Office Hours}", "{Professor}", "{Other}"],
       phrase: "",
+      isSelected: false
     }
   },
   computed: { // return cached values until dependencies change
     tokens: function () {
-      return this.tokenize()
+      return this.tokenize(this.phrase)
+    },
+    buttonData: function() {
+      return this.setupButtonData(this.tokens);
     }
   },
   methods: {
-    tokenize: function() { /// given a string, output an array of words
-      let arr = this.phrase.split(/[ ?]/);
+    tokenize: function(inputStr) { /// given a string, output an array of words
+      let arr = inputStr.split(/[ ?]/);
       // remove the last one if it's the empty string
       arr[arr.length - 1] == '' ? arr.pop() : null;
       return arr;
+    },
+    setupButtonData: function(givenToks) { /// given tokens, setup button data obj for each token
+      return givenToks.map((x) => x={token:x, isSelected:false});
+    },
+    toggleIsSelected: function(tokenObj) {
+      tokenObj.isSelected = !tokenObj.isSelected;
+      this.$forceUpdate();
+    },
+    annotateButtonData: function(cat) { /// given category, annotate selected button data
+      let start = null;
+      let end = null;
+      let done = false;
+      for (let i = 0; i < this.buttonData.length; i++) {
+        const tokenObj = this.buttonData[i];
+        if (done && tokenObj.isSelected) { // if already found a contiguous block
+          let msg = "Please select a contiguous section of tokens";
+          console.log(msg);
+          alert(msg);
+          console.log("done && tokenObj.isSelected....", "start", start, "end",end);
+          return;
+        } else if (tokenObj.isSelected) {
+          start = (start != null) ? start : i; // set the start index
+          end = i; // set the end index
+          console.log("tokenObj.isSelected....", "start", start, "end",end);
+        } else if (start && !done) {
+          done = true;
+          console.log("start && !done....", "start", start, "end",end);
+        }
+      }
+
+      if (start != null) {
+        let numToSlice = end - start + 1;
+        let replacement = {token: cat, isSelected: false};
+        // slice and replace with category
+        this.buttonData.splice(start, numToSlice, replacement);
+        this.$forceUpdate();
+      }
     }
   }
 };
@@ -27,19 +68,15 @@ export default {
   <!-- TODO: change background -->
   <div class="page diagonal-background">
     <h1 class="page-title">Phrases</h1>
-    <div class="dropdown-menu">
-      <select>
-        <option v-for="(cat, index) in categories" v-bind:key="index">
-          {{ cat }}
-        </option>
-      </select>
-    </div>
+
     <div class="phrase-input-category-box is-centered">
       <div class="phrase-category-box">
-        <button class="phrase-category-button">Building</button>
-        <button class="phrase-category-button">Office Hours</button>
-        <button class="phrase-category-button">Professor</button>
-        <button class="phrase-category-button">create_placeholder?</button>
+        <button v-for="(cat, index) in categories"
+                v-bind:key="index"
+                v-on:click="annotateButtonData(cat)"
+                class="phrase-category-button">
+          {{ cat }}
+        </button>
       </div>
 
       <div class="phrase-input-box">
@@ -61,13 +98,24 @@ export default {
         <img src="../assets/start-quote.svg" alt="start-quote.svg">
         <br>
         <div>
-          <button v-for="(token, index) in this.tokens"
+          <button v-for="(tokenObj, index) in this.buttonData"
                   v-bind:key="index"
-                  v-bind:class="{ 'data-button': true, 'selected': true }">
-            {{ token }}
+                  v-bind:class="{ 'data-button':true,
+                                  'round-outlined-button':true,
+                                  'selected': tokenObj.isSelected
+                  }"
+                  v-on:click="toggleIsSelected(tokenObj)">
+            {{ buttonData[index].token }}
           </button>
         </div>
         <img src="../assets/end-quote.svg" alt="end-quote.svg">
+      </div>
+
+      <div v-if="this.phrase != ''"
+          style="margin-top:1em">
+        <button class="round-outlined-button">
+          Upload
+        </button>
       </div>
 
     </div>
@@ -76,7 +124,7 @@ export default {
 
 <style>
 
-.data-button {
+.round-outlined-button {
   border: 2px solid black;
   background-color: white;
   color: black;
@@ -85,14 +133,17 @@ export default {
   font-size: 16px;
   cursor: pointer;
   border-radius: 4px;
+}
+
+.data-button {
   border-color: #2196F3;
   color: dodgerblue
 }
 
-.data-button:hover {
+/* .data-button:hover {
   background: #2196F3;
   color: white;
-}
+} */
 
 .data-button.selected {
   background: #2196F3;
