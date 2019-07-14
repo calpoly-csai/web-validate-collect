@@ -152,15 +152,20 @@ export default {
   border-radius: 4px;
 }
 
+.round-outlined-button:hover {
+  border-color: #2196F3;
+  color: dodgerblue
+}
+
 .data-button {
   border-color: #2196F3;
   color: dodgerblue
 }
 
-/* .data-button:hover {
+.data-button:hover {
   background: #2196F3;
   color: white;
-} */
+}
 
 .data-button.selected {
   background: #2196F3;
