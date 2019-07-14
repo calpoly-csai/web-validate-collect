@@ -4,7 +4,7 @@ export default {
     return {
       categories: ["{Building}", "{Office Hours}", "{Professor}", "{Other}"],
       phrase: "",
-      isSelected: false
+      buttonDataHasBeenAnnotated: false
     }
   },
   computed: { // return cached values until dependencies change
@@ -29,7 +29,10 @@ export default {
       tokenObj.isSelected = !tokenObj.isSelected;
       this.$forceUpdate();
     },
-    annotateButtonData: function(cat) { /// given category, annotate selected button data
+    buttonDataHasSelection: function() {
+      return this.findStartEndOfSelection().start != null ? true : false;
+    },
+    findStartEndOfSelection: function() {
       let start = null;
       let end = null;
       let done = false;
@@ -50,12 +53,18 @@ export default {
           console.log("start && !done....", "start", start, "end",end);
         }
       }
-
+      return {start, end};
+    },
+    annotateButtonData: function(cat) { /// given category, annotate selected button data
+      let result = this.findStartEndOfSelection();
+      let start = result.start;
+      let end = result.end;
       if (start != null) {
         let numToSlice = end - start + 1;
         let replacement = {token: cat, isSelected: false};
         // slice and replace with category
         this.buttonData.splice(start, numToSlice, replacement);
+        this.buttonDataHasBeenAnnotated = true;
         this.$forceUpdate();
       }
     }
@@ -70,33 +79,32 @@ export default {
     <h1 class="page-title">Phrases</h1>
 
     <div class="phrase-input-category-box is-centered">
-      <div class="phrase-category-box">
-        <button v-for="(cat, index) in categories"
-                v-bind:key="index"
-                v-on:click="annotateButtonData(cat)"
-                class="phrase-category-button">
-          {{ cat }}
-        </button>
-      </div>
-
+      <br>
       <div class="phrase-input-box">
         <br>
         <strong>Input Example:</strong>
         <br><br>
+        <div>
+          <img class="start-quote-img" align="left" src="../assets/start-quote.svg" alt="start-quote.svg">
+        </div>
         <input
           type="text"
           placeholder="Phrase Example"
           class="phrase-input"
           v-model="phrase"
         >
-        <br><br>
+        <br>
+        <div>
+          <img class="end-quote-img" align="right" src="../assets/end-quote.svg" alt="end-quote.svg">
+        </div>
+        <br>
+        <br>
+        <br>
       </div>
 
       <div v-if="this.phrase != ''" class="phrase-input-box">
         <br>
         <div><strong>Query:</strong></div>
-        <img src="../assets/start-quote.svg" alt="start-quote.svg">
-        <br>
         <div>
           <button v-for="(tokenObj, index) in this.buttonData"
                   v-bind:key="index"
@@ -108,10 +116,19 @@ export default {
             {{ buttonData[index].token }}
           </button>
         </div>
-        <img src="../assets/end-quote.svg" alt="end-quote.svg">
       </div>
 
-      <div v-if="this.phrase != ''"
+      <div v-if="this.buttonDataHasSelection()"
+           class="phrase-category-box">
+        <button v-for="(cat, index) in categories"
+                v-bind:key="index"
+                v-on:click="annotateButtonData(cat)"
+                class="phrase-category-button">
+          {{ cat }}
+        </button>
+      </div>
+
+      <div v-if="this.buttonDataHasBeenAnnotated"
           style="margin-top:1em">
         <button class="round-outlined-button">
           Upload
