@@ -4,8 +4,7 @@ export default {
     return {
       categories: ["{Building}", "{Office Hours}", "{Professor}", "{Other}"],
       phrase: "",
-      buttonDataHasBeenAnnotated: false,
-      tokenRerenderKey: 0
+      buttonDataHasBeenAnnotated: false
     };
   },
   computed: {
@@ -18,9 +17,11 @@ export default {
     buttonData: function() {
       /// given tokens, setup button data obj for each
       let tokens = this.tokens.filter(token => token != ""); // filters out spacess
-      return tokens.map(
-        x => (x = { token: x, category: null, isSelected: false })
-      );
+      return tokens.map(token => ({
+        token,
+        category: null,
+        isSelected: false
+      }));
     }
   },
   methods: {
@@ -47,21 +48,12 @@ export default {
           this.$forceUpdate();
           // tell the user that contiguous selections are required
           alert(msg);
-          console.log(
-            "done && tokenObj.isSelected....",
-            "start",
-            start,
-            "end",
-            end
-          );
           return;
         } else if (tokenObj.isSelected) {
           start = start != null ? start : i; // set the start index
           end = i; // set the end index
-          console.log("tokenObj.isSelected....", "start", start, "end", end);
         } else if (start && !done) {
           done = true;
-          console.log("start && !done....", "start", start, "end", end);
         }
       }
       return { start, end };
@@ -81,7 +73,8 @@ export default {
       }
     },
     forceReRender() {
-      this.tokenRerenderKey++;
+      this.phrase += "a";
+      this.phrase = this.phrase.slice(0, -1);
     }
   }
 };
@@ -91,15 +84,13 @@ export default {
 <template>
   <!-- TODO: change background -->
   <div class="page diagonal-background">
-    <h1 class="page-title">Phrases</h1>
+    <h1 class="page-title padding-small">Phrases</h1>
 
-    <div class="phrase-input-category-box is-centered">
-      <br />
-      <div class="phrase-input-box">
-        <br />
-        <strong>Input Example:</strong>
-        <br />
-        <br />
+    <div class="phrase-input-category-box is-centered padding-small">
+      <div class="phrase-input-box padding-small">
+        <p class="padding-large">
+          <b>Input Example:</b>
+        </p>
         <div>
           <img
             class="start-quote-img"
@@ -109,8 +100,7 @@ export default {
           />
         </div>
         <input type="text" placeholder="Phrase Example" class="phrase-input" v-model="phrase" />
-        <br />
-        <div>
+        <div class="padding-large">
           <img
             class="end-quote-img"
             align="right"
@@ -118,20 +108,16 @@ export default {
             alt="end-quote.svg"
           />
         </div>
-        <br />
-        <br />
-        <br />
       </div>
 
       <div v-if="this.phrase != ''" class="phrase-input-box">
-        <br />
         <div>
           <strong>Query:</strong>
         </div>
-        <div :key="tokenRerenderKey">
+        <div>
           <button
             class="data-button round-outlined-button"
-            v-for="(tokenObj, index) in this.buttonData"
+            v-for="(tokenObj, index) in buttonData"
             v-bind:key="index"
             v-bind:class="{ 'selected': tokenObj.isSelected}"
             @click="toggleIsSelected(tokenObj)"
@@ -157,6 +143,14 @@ export default {
 </template>
 
 <style>
+.padding-small {
+  padding-bottom: 35px;
+}
+
+.padding-large {
+  padding-bottom: 50px;
+}
+
 .round-outlined-button {
   border: 2px solid black;
   background-color: white;
