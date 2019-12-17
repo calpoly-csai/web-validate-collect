@@ -5,26 +5,26 @@ export default {
       categories: ["{Building}", "{Office Hours}", "{Professor}", "{Other}"],
       phrase: "",
       buttonDataHasBeenAnnotated: false
-    }
+    };
   },
-  computed: { // return cached values until dependencies change
-    tokens: function () {
-      return this.tokenize(this.phrase)
+  computed: {
+    // return cached values until dependencies change
+    tokens: function() {
+      // given a string, output an array of words
+      let arr = this.phrase.split(/[ ?]/); // need to use regex to get rid of the question mark
+      return arr;
     },
     buttonData: function() {
-      return this.setupButtonData(this.tokens);
+      /// given tokens, setup button data obj for each
+      let tokens = this.tokens.filter(token => token != ""); // filters out spacess
+      return tokens.map(token => ({
+        token,
+        category: null,
+        isSelected: false
+      }));
     }
   },
   methods: {
-    tokenize: function(inputStr) { /// given a string, output an array of words
-      let arr = inputStr.split(/[ ?]/);
-      // remove the last one if it's the empty string
-      arr[arr.length - 1] == '' ? arr.pop() : null;
-      return arr;
-    },
-    setupButtonData: function(givenToks) { /// given tokens, setup button data obj for each token
-      return givenToks.map((x) => x={token:x, isSelected:false});
-    },
     toggleIsSelected: function(tokenObj) {
       tokenObj.isSelected = !tokenObj.isSelected;
       this.$forceUpdate();
@@ -38,7 +38,8 @@ export default {
       let done = false;
       for (let i = 0; i < this.buttonData.length; i++) {
         const tokenObj = this.buttonData[i];
-        if (done && tokenObj.isSelected) { // if already found a contiguous block
+        if (done && tokenObj.isSelected) {
+          // if already found a contiguous block
           let msg = "Please select a contiguous section of tokens";
           console.log(msg);
           // deselect it; need to deselect so this.buttonDataHasSelection() call does not loop infinitely
@@ -47,31 +48,33 @@ export default {
           this.$forceUpdate();
           // tell the user that contiguous selections are required
           alert(msg);
-          console.log("done && tokenObj.isSelected....", "start", start, "end",end);
           return;
         } else if (tokenObj.isSelected) {
-          start = (start != null) ? start : i; // set the start index
+          start = start != null ? start : i; // set the start index
           end = i; // set the end index
-          console.log("tokenObj.isSelected....", "start", start, "end",end);
         } else if (start && !done) {
           done = true;
-          console.log("start && !done....", "start", start, "end",end);
         }
       }
-      return {start, end};
+      return { start, end };
     },
-    annotateButtonData: function(cat) { /// given category, annotate selected button data
+    annotateButtonData: function(cat) {
+      /// given category, annotate selected button data
       let result = this.findStartEndOfSelection();
       let start = result.start;
       let end = result.end;
       if (start != null) {
         let numToSlice = end - start + 1;
-        let replacement = {token: cat, isSelected: false};
+        let replacement = { token: cat, isSelected: false };
         // slice and replace with category
         this.buttonData.splice(start, numToSlice, replacement);
         this.buttonDataHasBeenAnnotated = true;
         this.$forceUpdate();
       }
+    },
+    forceReRender() {
+      this.phrase += "a";
+      this.phrase = this.phrase.slice(0, -1);
     }
   }
 };
@@ -81,70 +84,72 @@ export default {
 <template>
   <!-- TODO: change background -->
   <div class="page diagonal-background">
-    <h1 class="page-title">Phrases</h1>
+    <h1 class="page-title padding-small">Phrases</h1>
 
-    <div class="phrase-input-category-box is-centered">
-      <br>
-      <div class="phrase-input-box">
-        <br>
-        <strong>Input Example:</strong>
-        <br><br>
+    <div class="phrase-input-category-box is-centered padding-small">
+      <div class="phrase-input-box padding-small">
+        <p class="padding-large">
+          <b>Input Example:</b>
+        </p>
         <div>
-          <img class="start-quote-img" align="left" src="../assets/start-quote.svg" alt="start-quote.svg">
+          <img
+            class="start-quote-img"
+            align="left"
+            src="../assets/start-quote.svg"
+            alt="start-quote.svg"
+          />
         </div>
-        <input
-          type="text"
-          placeholder="Phrase Example"
-          class="phrase-input"
-          v-model="phrase"
-        >
-        <br>
-        <div>
-          <img class="end-quote-img" align="right" src="../assets/end-quote.svg" alt="end-quote.svg">
+        <input type="text" placeholder="Phrase Example" class="phrase-input" v-model="phrase" />
+        <div class="padding-large">
+          <img
+            class="end-quote-img"
+            align="right"
+            src="../assets/end-quote.svg"
+            alt="end-quote.svg"
+          />
         </div>
-        <br>
-        <br>
-        <br>
       </div>
 
       <div v-if="this.phrase != ''" class="phrase-input-box">
-        <br>
-        <div><strong>Query:</strong></div>
         <div>
-          <button v-for="(tokenObj, index) in this.buttonData"
-                  v-bind:key="index"
-                  v-bind:class="{ 'data-button':true,
-                                  'round-outlined-button':true,
-                                  'selected': tokenObj.isSelected
-                  }"
-                  v-on:click="toggleIsSelected(tokenObj)">
-            {{ buttonData[index].token }}
-          </button>
+          <strong>Query:</strong>
+        </div>
+        <div>
+          <button
+            class="data-button round-outlined-button"
+            v-for="(tokenObj, index) in buttonData"
+            v-bind:key="index"
+            v-bind:class="{ 'selected': tokenObj.isSelected}"
+            @click="toggleIsSelected(tokenObj)"
+          >{{ buttonData[index].token }}</button>
         </div>
       </div>
 
-      <div v-if="this.buttonDataHasSelection()"
-           class="phrase-category-box">
-        <button v-for="(cat, index) in categories"
-                v-bind:key="index"
-                v-on:click="annotateButtonData(cat)"
-                class="phrase-category-button">
-          {{ cat }}
-        </button>
+      <div v-if="this.buttonDataHasSelection()" class="phrase-category-box">
+        <button
+          v-for="(cat, index) in categories"
+          v-bind:key="index"
+          @click="annotateButtonData(cat)"
+          class="phrase-category-button"
+        >{{ cat }}</button>
       </div>
 
-      <div v-if="this.buttonDataHasBeenAnnotated"
-          style="margin-top:1em">
-        <button class="round-outlined-button">
-          Upload
-        </button>
+      <div v-if="this.buttonDataHasBeenAnnotated" style="margin-top:1em">
+        <button class="round-outlined-button">Upload</button>
+        <button class="round-outlined-button" @click="forceReRender()">Reset Phrase</button>
       </div>
-
     </div>
   </div>
 </template>
 
 <style>
+.padding-small {
+  padding-bottom: 35px;
+}
+
+.padding-large {
+  padding-bottom: 50px;
+}
 
 .round-outlined-button {
   border: 2px solid black;
@@ -158,22 +163,22 @@ export default {
 }
 
 .round-outlined-button:hover {
-  border-color: #2196F3;
-  color: dodgerblue
+  border-color: #2196f3;
+  color: dodgerblue;
 }
 
 .data-button {
-  border-color: #2196F3;
-  color: dodgerblue
+  border-color: #2196f3;
+  color: dodgerblue;
 }
 
 .data-button:hover {
-  background: #2196F3;
+  background: #2196f3;
   color: white;
 }
 
 .data-button.selected {
-  background: #2196F3;
+  background: #2196f3;
   color: white;
 }
 
@@ -196,29 +201,21 @@ select {
   -webkit-appearance: none;
   -moz-appearance: none;
 
-  background-image:
-    linear-gradient(135deg, green 50%, transparent 50%),
+  background-image: linear-gradient(135deg, green 50%, transparent 50%),
     linear-gradient(45deg, transparent 50%, green 50%),
     linear-gradient(to right, #ccc, #ccc);
-  background-position:
-    calc(100% - 15px) 1em,
-    calc(100% - 20px) 1em,
+  background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em,
     calc(100% - 2.5em) 0.5em;
-  background-size:
-    5px 5px,
-    5px 5px,
-    1px 1.5em;
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
   background-repeat: no-repeat;
   border-color: green;
   outline: 0;
 }
 
-
 select:-moz-focusring {
   color: transparent;
   text-shadow: 0 0 0 #000;
 }
-
 
 .phrase-category-button {
   margin: auto;
@@ -247,7 +244,7 @@ select:-moz-focusring {
 }
 
 .phrase-input-box {
-  background-color: rgb(236,236,236);
+  background-color: rgb(236, 236, 236);
 }
 
 .phrase-input {
@@ -260,7 +257,6 @@ select:-moz-focusring {
 }
 
 .phrase-category-button {
-
 }
 
 .is-centered {
